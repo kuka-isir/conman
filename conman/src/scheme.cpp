@@ -1297,12 +1297,19 @@ bool Scheme::regenerateModel()
     GetAllPorts(source_vertex->block->provides(), ports);
 
     // Create graph arcs for each port between blocks
+#if RTT_VERSION_MAJOR == 2 && RTT_VERSION_MINOR == 9
+    std::vector<RTT::base::PortInterface*>::iterator port_it;
+#else
     std::vector<RTT::base::PortInterface*>::const_iterator port_it;
+#endif
     for(port_it = ports.begin(); port_it != ports.end(); ++port_it)
     {
       // Get the port, for readability
+#if RTT_VERSION_MAJOR == 2 && RTT_VERSION_MINOR == 9
+      RTT::base::PortInterface *port = *port_it;
+#else
       const RTT::base::PortInterface *port = *port_it;
-
+#endif
       RTT::log(RTT::Debug) << "Examining port: "<<source_vertex->block->getName() << " . " <<port->getName() << RTT::endlog();
 
       // Only start from output ports
@@ -1311,7 +1318,11 @@ bool Scheme::regenerateModel()
       }
 
       // Get the port connections (to get endpoints)
+#if RTT_VERSION_MAJOR == 2 && RTT_VERSION_MINOR == 9
+      std::list<RTT::internal::ConnectionManager::ChannelDescriptor> channels = port->getManager()->getConnections();
+#else
       std::list<RTT::internal::ConnectionManager::ChannelDescriptor> channels = port->getManager()->getChannels();
+#endif
       std::list<RTT::internal::ConnectionManager::ChannelDescriptor>::iterator channel_it;
 
       // Create graph arcs for each connection
@@ -1920,4 +1931,3 @@ void Scheme::getBlockDescriptions(
     blocks.push_back(conman::BlockDescription(block));
   }
 }
-
