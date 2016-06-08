@@ -35,11 +35,11 @@ set(CMAKE_BUILD_TYPE Debug)
 ## Build ##
 ###########
 
-include_directories(include ${catkin_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS}, ${USE_OROCOS_INCLUDE_DIRS})
 orocos_use_package( ocl-taskbrowser )
 orocos_use_package( ocl-deployment )
 orocos_use_package( ocl-logging )
 
+include_directories(include ${catkin_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS}, ${USE_OROCOS_INCLUDE_DIRS})
 #orocos_plugin(conman_hook
 #    src/hook_service.cpp )
 #target_link_libraries(conman_hook conman)
@@ -72,5 +72,3 @@ install(DIRECTORY include/${PROJECT_NAME}/
   FILES_MATCHING PATTERN "*.h"
   PATTERN ".svn" EXCLUDE
   )
-
-
