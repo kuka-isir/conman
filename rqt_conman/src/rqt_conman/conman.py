@@ -2,14 +2,10 @@ import os
 import rospy
 
 from qt_gui.plugin import Plugin
-from python_qt_binding import loadUi
-from python_qt_binding.QtGui import QWidget
-from python_qt_binding.QtGui import QPalette
-from python_qt_binding.QtGui import QStyle,QApplication,QMouseEvent
-from python_qt_binding.QtCore import Qt
-from python_qt_binding.QtCore import Signal,Slot
-from python_qt_binding.QtGui import QWidget,QPalette,QColor,QStandardItemModel,QItemDelegate,QStyleOptionButton,QStandardItem,QIcon
-from python_qt_binding.QtCore import Qt,QTimer,Signal,QRect,QSize,QEvent
+from python_qt_binding import  *
+from python_qt_binding.QtCore import  *
+from python_qt_binding.QtGui import  *
+from python_qt_binding.QtWidgets import *
 from rqt_py_common.extended_combo_box import ExtendedComboBox
 from qt_gui_py_common.worker_thread import WorkerThread
 
@@ -128,10 +124,10 @@ class Conman(Plugin):
 
         self._widget.ns_refresh_button.setIcon(QIcon.fromTheme('view-refresh'))
         self._widget.setObjectName('ConmanPluginUi')
-        # Show _widget.windowTitle on left-top of each plugin (when 
-        # it's set in _widget). This is useful when you open multiple 
-        # plugins at once. Also if you open multiple instances of your 
-        # plugin at once, these lines add number to make it easy to 
+        # Show _widget.windowTitle on left-top of each plugin (when
+        # it's set in _widget). This is useful when you open multiple
+        # plugins at once. Also if you open multiple instances of your
+        # plugin at once, these lines add number to make it easy to
         # tell from pane to pane.
         if context.serial_number() > 1:
             self._widget.setWindowTitle(self._widget.windowTitle() + (' (%d)' % context.serial_number()))
@@ -293,14 +289,14 @@ class Conman(Plugin):
         self._widget.groups_table.horizontalHeader().setStretchLastSection(True)
 
     def _update_blocks(self):
-        
+
         for (name, block) in self.blocks.items():
             items = self._blocks_model.findItems(name, column=3)
             if len(items) > 0:
                 item = items[0]
             else:
                 continue
-            
+
             row = item.row()
             checked = self._blocks_model.item(row,0).checkState() == Qt.Checked
             if checked and block.state.value != conman_msgs.msg.TaskState.RUNNING:
@@ -321,12 +317,12 @@ class Conman(Plugin):
                 item = items[0]
             else:
                 continue
-            
+
             row = item.row()
             self._blocks_model.item(row,0).setCheckState(Qt.Checked if enable else Qt.Unchecked)
 
         self._update_blocks()
-        
+
     def _update_groups(self):
         for (name, group) in self.groups.items():
             group_items = self._groups_model.findItems(name, column=3)
@@ -365,7 +361,7 @@ class Conman(Plugin):
 
 
     def enable_widgets(self, enable):
-        
+
         #self._widget.generate_graph_checkbox.setEnabled(enable)
         self._widget.force_enable_checkbox.setEnabled(enable)
         #self._widget.disable_unused_button.setEnabled(enable)
@@ -438,7 +434,7 @@ class Conman(Plugin):
     @Slot(str)
     def _update_graph(self,dotcode):
         global initialized
-        if initialized: 
+        if initialized:
             self._widget.xdot_widget.set_dotcode(dotcode, center=False);
         else:
             self._widget.xdot_widget.set_dotcode(dotcode, center=True);
@@ -448,7 +444,7 @@ class Conman(Plugin):
     def _dotcode_msg_cb(self, msg):
         #self.new_dotcode_data = msg.data
         self.update_graph_sig.emit(msg.data)
-    
+
     def _update_widgets(self):
         self._update_groups()
         self._update_blocks()
